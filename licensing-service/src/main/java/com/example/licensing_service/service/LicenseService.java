@@ -1,12 +1,18 @@
 package com.example.licensing_service.service;
 
 import com.example.licensing_service.model.License;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.Random;
 
 @Service
 public class LicenseService {
+
+    @Autowired
+    MessageSource messages;
 
     public License getLicense(String licenseId, String organizationId){
         License license = new License();
@@ -18,12 +24,16 @@ public class LicenseService {
         license.setLicenseType("full");
         return license;
     }
-    public String createLicense(License license, String organizationId){
+    public String createLicense(License license,
+                                String organizationId,
+                                Locale locale){
         String responseMessage = null;
         if(license != null) {
             license.setOrganizationId(organizationId);
             responseMessage = String.format(
-                    "This is the post and the object is: %s", license.toString());
+                    messages.getMessage(
+                            "license.create.message", null, locale),
+                    license.toString());
         }
         return responseMessage;
     }
@@ -32,8 +42,9 @@ public class LicenseService {
         String responseMessage = null;
         if (license != null) {
             license.setOrganizationId(organizationId);
-            responseMessage = String.format(
-                    "This is the put and the object is: %s", license.toString()); }
+            responseMessage = String.format( messages.getMessage(
+                    "licence.update.message", null, null), license.toString());
+        }
         return responseMessage;
     }
     public String deleteLicense(String licenseId, String organizationId){ String responseMessage = null;
